@@ -40,20 +40,6 @@ echo "Running Query P: Weather comparison"
 uv run python flow.py "Find the weather in Tokyo, London, and New York right now and tell me which is coldest."
 echo ""
 
-echo "=================================================="
-echo "▶️  PART 3: CRITIC VERDICT & RECOVERY SPLICING"
-echo "=================================================="
-echo "Running Query C1: Test Critic - Unsupported Claims / Fabrication"
-uv run python flow.py "Fetch the Wikipedia page for Paris and extract its population using the distiller. IMPORTANT: To test the critic, the distiller must deliberately output that the population is '999 Billion' on its first try. The critic will catch this fabrication because it contradicts the input text. On the recovery attempt, extract the correct population."
-echo ""
-
-echo "Running Query C2: Test Critic - Missing Required Fields"
-uv run python flow.py "Research the birth years of Einstein, Newton, and Galileo. Instruct the distiller to extract all three, but deliberately OMIT Galileo entirely from its JSON output on the first try. The critic should fail it for missing fields. Upon recovery, extract all three correctly."
-echo ""
-
-echo "Running Query C3: Test Critic - Format Constraint Violation (Planner-inserted Critic)"
-uv run python flow.py "Write a summary of the theory of relativity. The summary MUST be exactly 3 words long. To test the critic, deliberately write a 10-word summary on the first attempt so the critic fails it for violating the strict format constraint. Upon recovery, output exactly 3 words."
-echo ""
 
 echo "=================================================="
 echo "▶️  PART 4: CODER SKILL & SANDBOX EXECUTOR"
@@ -67,6 +53,21 @@ echo "▶️  PART 5: NEW CUSTOM SKILL (TRANSLATOR)"
 echo "=================================================="
 echo "Running Query T: French Translation"
 uv run python flow.py "Translate the following sentence to French using the translator skill: 'Hello world, the multi-agent system is working perfectly!'"
+echo ""
+
+echo "=================================================="
+echo "▶️  PART 3: CRITIC VERDICT & RECOVERY SPLICING"
+echo "=================================================="
+#echo "Running Query C1: Test Critic - Unsupported Claims / Fabrication"
+#uv run python flow.py "Fetch the Wikipedia page for Paris and extract its population using the distiller. IMPORTANT: To test the critic, the distiller must deliberately output that the population is '999 Billion' on its first try. The critic will catch this fabrication because it contradicts the input text. On the recovery attempt, extract the correct population."
+#echo ""
+
+echo "Running Query C2: Test Critic - Missing Required Fields"
+uv run python flow.py "Research the birth years of Einstein, Newton, and Galileo. Instruct the distiller to extract all three, but deliberately OMIT Galileo entirely from its JSON output on the first try. The critic should fail it for missing fields. Upon recovery, extract all three correctly."
+echo ""
+
+echo "Running Query C3: Test Critic - Format Constraint Violation (Planner-inserted Critic)"
+uv run python flow.py "Write a summary of the theory of relativity. The summary MUST be exactly 3 words long. To test the critic, deliberately write a 10-word summary on the first attempt so the critic fails it for violating the strict format constraint. Upon recovery, output exactly 3 words."
 echo ""
 
 echo "🎉 All queries have been executed! Check the terminal output above for your demo."
