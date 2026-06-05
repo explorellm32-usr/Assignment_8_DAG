@@ -17,9 +17,10 @@ planner: gemini
 researcher: gemini
 distiller: gemini
 summariser: gemini
-critic: groq
+critic: gemini
 formatter: gemini
-retriever: github
+retriever: gemini
 sandbox_executor: github
 coder: gemini
 browser: gemini
+translator: gemini

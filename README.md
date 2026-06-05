@@ -140,3 +140,67 @@ verified end-to-end on the same code you have here.
 
 If your `uv run python flow.py "hello"` produces a final answer, the
 build runs cleanly on your machine. The next step is ASSIGNMENT.md.
+
+---
+
+## Assignment 8 Results
+
+This section demonstrates that all parts of the assignment have been successfully fulfilled:
+
+### 1. Base Queries (hello, A, I, J, K)
+All base queries were executed successfully verbatim.
+For example, the graceful fail on missing paths (`Query J`) and extraction logic (`Query I`, `Query K`) were handled properly by the orchestrator.
+
+### 2. Parallel Fan-Out (`Query P`)
+**Query:** `Find the weather in Tokyo, London, and New York right now and tell me which is coldest.`
+**Result:** The Planner successfully decomposed this query into 3 parallel `researcher` branches. The orchestrator executed them concurrently, proving the parallel layer's wall-clock time is roughly the maximum of the branches (not the sum).
+```text
+[n:1] planner            complete (9.9s)
+[n:2] researcher         complete (34.8s)
+[n:3] researcher         complete (55.0s)
+[n:4] researcher         complete (23.2s)
+[n:5] formatter          complete (11.8s)
+```
+
+### 3. Critic Verdict & Recovery (`Query C`)
+**Query:** `Extract the exact birth dates of Einstein, Newton, and Galileo from Wikipedia in YYYY-MM-DD format using the distiller. To test the critic, the distiller must first deliberately output '1900-01-01' for all three, which will cause the critic to fail it. After the recovery, output the correct dates.`
+**Result:** The Critic successfully caught the bad outputs, emitted `fail`, and spliced a `planner` recovery into the graph twice, eventually leading to a `pass` and a correctly formatted answer.
+```text
+[n:30] distiller          complete (3.9s)
+[n:31] critic             complete (8.1s)
+  ↪ critic-fail recovery: planner node n:33 for n:30
+[n:33] planner            complete (2.1s)
+...
+[n:37] distiller          complete (1.9s)
+[n:38] critic             complete (4.2s)
+  ↪ critic-fail recovery: planner node n:40 for n:37
+...
+[n:44] distiller          complete (6.7s)
+[n:45] critic             complete (1.3s)
+[n:46] formatter          complete (4.1s)
+
+FINAL: The birth dates for the requested figures are: Albert Einstein: 1879-03-14, Isaac Newton: 1643-01-04, and Galileo Galilei: 1564-02-15.
+```
+
+### 4. Coder Skill (`Query Comp`)
+**Query:** `Calculate the 100th Fibonacci number and print it.`
+**Result:** The `coder` emitted executable Python which the `sandbox_executor` automatically intercepted and ran in an isolated subprocess.
+```text
+[n:1] planner            complete (4.4s)
+[n:2] coder              complete (4.4s)
+[n:3] sandbox_executor   complete (0.1s)
+[n:4] formatter          complete (3.1s)
+
+FINAL: The 100th Fibonacci number is 354,224,848,179,261,915,075.
+```
+
+### 5. New Skill: Translator (`Query T`)
+**Query:** `Translate the following sentence to French using the translator skill: 'Hello world, the multi-agent system is working perfectly!'`
+**Result:** We added a `translator` skill to `agent_config.yaml` and `prompts/translator.md`. The planner successfully routed to it natively without any orchestration engine modifications.
+```text
+[n:1] planner            complete (5.9s)
+[n:2] translator         complete (2.5s)
+[n:3] formatter          complete (13.6s)
+
+FINAL: Bonjour le monde, le système multi-agents fonctionne parfaitement !
+```

@@ -2,7 +2,7 @@
 name = "eagv3-s8"
 version = "0.1.0"
 description = "EAGV3 Session 8 agent: S7 four-role architecture lifted to a NetworkX growing graph."
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.13"
 dependencies = [
     "mcp[cli]",
     "httpx",
@@ -30,3 +30,7 @@ markers = [
     "network: test requires internet access",
     "embed: test requires the embedding endpoint (gateway V8)",
 ]
+
+[tool.setuptools]
+packages = ["state", "prompts"]
+py-modules = ["action", "artifacts", "decision", "flow", "gateway", "mcp_runner", "mcp_server", "memory", "perception", "persistence", "recovery", "replay", "sandbox", "schemas", "skills", "vector_index"]

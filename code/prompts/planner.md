@@ -9,6 +9,7 @@ Available skills:
   formatter          render the final user-facing answer (TERMINAL)
   coder              emit Python (stub; routes to sandbox_executor)
   sandbox_executor   run Python from coder
+  translator         translate text to a target language
   (browser           reserved for Session 9)
 
 Output (JSON, no markdown):
